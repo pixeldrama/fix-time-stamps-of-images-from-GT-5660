@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# coding: utf-8
 
 #    Copyright 2012 Benjamn Weißenfels b.pixeldrama@gmail.com
 #
@@ -20,14 +21,12 @@
 
 # Samsung Galaxy GT-S560 timestamps are buggy. This program solves
 # this problem in your photos
-# 
+#
 # Dependencies: You will need pyexiv2 library (v 3.0 )installed on your system to run it
 #
 #
 # Usage:  python exifseconds.py <PATH_TO_FIX_FILES>
 
-
- 
 
 import sys, os
 import pyexiv2
@@ -43,13 +42,13 @@ def get_images_from_path(basepath):
         for file in files:
             if os.path.splitext(file)[1].lower() in ('.jpg', '.jpeg'):
                 image_list.append(os.path.join(root, file))
-    return image_list          
+    return image_list
 
 def fix_date_time(image_path, tagname):
     try:
         metadata = pyexiv2.ImageMetadata(image_path)
         metadata.read()
-    except IOError: 
+    except IOError:
         print "IOError: ", image_path
         return
     except UnicodeDecodeError:
@@ -65,21 +64,21 @@ def fix_date_time(image_path, tagname):
         corrected_string = raw.replace("-", ":")
         tag.value = corrected_string[:-1] #seems to be one char too much
         metadata.write()
-        print "fixed: ", image_path.split('/')[-1], 
+        print "fixed: ", image_path.split('/')[-1],
 
 def main(argv):
     if len(argv)<2:
-        print """This program fixes invalid DateTime stamps, 
+        print """This program fixes invalid DateTime stamps,
 replaces hyphens with colon. Specially created to be used
 with pictures from the Galaxy GT-S5660."""
         return
-    
+
     image_list = get_images_from_path(argv[1])
 
     for image_path in image_list:
         for tagname in tagnames:
-            print "try to fix:", image_path
-            fix_date_time(image_path, tagname)        
+            print "try to fix", tagname, "in", image_path
+            fix_date_time(image_path, tagname)
 
 if __name__ == "__main__":
     main(sys.argv)
