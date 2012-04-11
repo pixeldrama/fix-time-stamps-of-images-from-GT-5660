@@ -32,7 +32,7 @@ import sys, os
 import pyexiv2
 import re
 
-pattdash = ("[0-9][0-9][0-9][0-9]:[0-9][0-9]:[0-9][0-9]\ [0-9][0-9]:[0-9][0-9]:[0-9][0-9]\ ")
+pattdash = ("[0-9][0-9][0-9][0-9]\\-[0-9][0-9]\\-[0-9][0-9]\ [0-9][0-9]:[0-9][0-9]:[0-9][0-9]\ ")
 pattern = re.compile(pattdash)
 tagnames = ['Exif.Photo.DateTimeOriginal', 'Exif.Photo.DateTimeDigitized']
 
@@ -62,7 +62,7 @@ def fix_date_time(image_path, tagname):
 
     if tag != None and type(raw) == type('') and pattern.match(raw):
         corrected_string = raw.replace("-", ":")
-        tag.value = corrected_string[:-1] #seems to be one char too much
+        tag.value = corrected_string[:-1] # one char too much
         metadata.write()
         print "fixed: ", image_path.split('/')[-1],
 
